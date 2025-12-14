@@ -1,0 +1,16 @@
+import { createI18n } from 'vue-i18n';
+import langEn from './locale/en';
+import langHi from './locale/hi';
+
+const i18n = createI18n({
+  locale: 'zh-CN',
+  fallbackLocale: 'en-US',
+  messages: {
+    en: langEn,
+    hi: langHi
+  }
+});
+document.title = i18n.global.t('home.title');
+
+export default i18n;
+

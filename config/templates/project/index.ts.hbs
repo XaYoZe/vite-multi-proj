@@ -1,0 +1,28 @@
+import 'UTILS/jsBridge';
+import { createApp } from 'vue';
+import 'STYLES/style-reset.scss';
+import App from '@layouts/index.vue';
+{{#if usePinia}}
+import stores from '@stores/index';
+{{/if }}
+{{#if useRouter}}
+import router from '@router/index';
+{{/if}}
+{{#if useI18n}}
+import i18n from '@i18n/index';
+{{/if}}
+
+console.log('构建时间:', __BUILD_TIME__);
+console.log('构建项目:', __PROJECT__);
+
+createApp(App)
+{{#if usePinia}}
+.use(stores)
+{{/if}}
+{{#if useRouter}}
+.use(router)
+{{/if}}
+{{#if useI18n}}
+.use(i18n)
+{{/if}}
+.mount('#app');

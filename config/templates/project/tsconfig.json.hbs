@@ -1,0 +1,45 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "tsBuildInfoFile": "../../../node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "types": [
+      "vite/client"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "COMMON/*": ["../../../common"],
+      "ASSETS/*": ["../../../common/assets/"],
+      "IMAGES/*": ["../../../common/assets/images"],
+      "STYLES/*": ["../../../common/assets/styles"],
+      "UTILS/*": ["../../../common/utils/*"],
+      "@": ["./"],
+      "@api/*": ["./api/*"],
+      "@i18n/*": ["./i18n/*"],
+      "@compo/*": ["./components/*"],
+      "@router/*": ["./router/*"],
+      "@stores/*": ["./stores/*"],
+      "@layouts/*": ["./layouts/*"],
+      "@pages/*": ["./pages/*"],
+      "@assets/*": ["./assets//*"],
+      "@styles/*": ["./assets/styles/*"],
+      "@images/*": ["./assets/images/*"],
+      "@public/*": ["./public/*"]
+    }
+  },
+  "include": [
+    "./**/*.js",
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./**/*.vue",
+    "../../../types/**/*.d.ts",
+    "../../../common/**/*.ts",
+    "../../../common/**/*.vue"
+  ]
+}

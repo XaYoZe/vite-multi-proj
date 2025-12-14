@@ -1,0 +1,23 @@
+<script setup lang="ts"></script>
+<template>
+  {{#if useRouter}}
+  <router-view v-slot="{ Component }">
+    <component :is="Component" />
+  </router-view>
+  {{else}}
+  <div class="app-container">
+    <main>
+      <slot />
+    </main>
+  </div>
+  {{/if}}
+</template>
+<style scoped lang="scss">
+{{#if useRouter}}
+{{ else }}
+.app-container {
+  width: 100vw;
+  min-height: 100vh;
+}
+{{/if}}
+</style>

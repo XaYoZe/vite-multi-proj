@@ -1,0 +1,7 @@
+// 全局混入样式混入
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
