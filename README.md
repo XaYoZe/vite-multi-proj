@@ -20,7 +20,7 @@
 
 ## 命令行
 
-- `pnpm create:activity 年份:项目名`
+- `pnpm create:proj 年份:项目名`
   生成新项目，在`src`目录下使用模板生成新的项目，路劲为`/src/年份/项目名`
 - `pnpm dev 年份:项目名`
   开发模式，测试环境
