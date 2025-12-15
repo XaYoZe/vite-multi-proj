@@ -1,17 +1,20 @@
 import path from 'path';
 import type { UserConfig } from 'vite';
 import { uploadToS3 } from './plugins/rollup-plugin-upload-to-s3';
-import { replaceVendorLinks } from './plugins/rollup-plugin-replace-vendor-links';
-import { createBaseConfig, getProjectPaths } from './vite.config.base';
+import { createBaseConfig, getProjectPaths, parseCommandLineArgs } from './vite.config.base';
 import { loadEnv, defineConfig, mergeConfig } from 'vite';
+import Sonda from 'sonda/vite';
+import legacy from '@vitejs/plugin-legacy';
+
+// import { visualizer } from 'rollup-plugin-visualizer';
 
 // 正式环境构建配置
 export default defineConfig(config => {
-  const { projectPath, outDir, rootPath } = getProjectPaths();
+  const { projectPath, outDir, rootPath, project } = getProjectPaths();
+  const commandLineArgs = parseCommandLineArgs();
 
   const env = loadEnv(config.mode, path.join(rootPath, './config/env'), '');
 
-  console.log(env, config);
   const beseConfig = createBaseConfig({ env, ...config });
 
   // 获取 Vendor CDN 基础 URL（优先使用环境变量，否则使用测试值）
@@ -27,16 +30,24 @@ export default defineConfig(config => {
   };
 
   // 构建插件数组
-  const plugins = [uploadToS3({ env, ...config })];
+  const plugins = [
+    legacy(),
+    uploadToS3({
+      enbled: commandLineArgs.s3,
+      env,
+      ...config
+    }),
+    Sonda({
+      enabled: commandLineArgs.sonda,
+      deep: true,
+      sources: true,
+      gzip: true,
+      filename: `${project}_${new Date().toLocaleString().replace(/[\\\/: ]/g, '')}.sonda.html`
+    })
+  ];
 
   // 如果配置了 CDN URL，则添加链接替换插件
   if (vendorCdnUrl) {
-    plugins.push(
-      replaceVendorLinks({
-        vendorCdnUrl,
-        outputDir: outDir
-      })
-    );
   }
 
   return mergeConfig(beseConfig, {

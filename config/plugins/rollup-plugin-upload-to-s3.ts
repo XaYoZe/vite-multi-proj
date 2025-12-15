@@ -183,7 +183,15 @@ class S3UploadClient {
 }
 
 // 上传构建目录到S3
-export function uploadToS3(config: { env?: Record<string, string> } & ConfigEnv): Plugin {
+export function uploadToS3(
+  config: { env?: Record<string, string>; enbled?: boolean } & ConfigEnv
+): Plugin {
+  if (Object.keys(config).indexOf('enbled') > -1) {
+    if (!config.enbled)
+      return {
+        name: 'upload-to-s3'
+      };
+  }
   // 构建目录
   const { outDir, rootPath } = getProjectPaths();
   // 从环境变量获取配置

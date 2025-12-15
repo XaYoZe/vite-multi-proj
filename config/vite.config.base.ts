@@ -2,24 +2,21 @@ import path from 'path';
 import vue from '@vitejs/plugin-vue';
 import vuePluginOptions from './vue.config';
 import type { UserConfig, ConfigEnv } from 'vite';
-import legacy from '@vitejs/plugin-legacy';
-import alias from './alias';
-// import Sonda from 'sonda/vite';
-
 // 解析命令行参数的辅助函数
 export function parseCommandLineArgs() {
   const args = process.argv.slice(2);
-  const result: Record<string, string> = {};
+  const result: Record<string, any> = {};
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg.startsWith('--')) {
+    if (arg && arg.startsWith('--')) {
       const key = arg.slice(2);
       const nextArg = args[i + 1];
+      if (!key) continue;
       if (nextArg && !nextArg.startsWith('--')) {
         result[key] = nextArg;
         i++;
       } else {
-        result[key] = 'true';
+        result[key] = true;
       }
     }
   }
@@ -78,7 +75,7 @@ export function createBaseConfig(config: { env?: Record<string, string> } & Conf
         }
       }
     },
-    plugins: [vue(vuePluginOptions), legacy()],
+    plugins: [vue(vuePluginOptions)],
     define: {
       API_BASE_URL: JSON.stringify(config.env?.API_BASE_URL),
       __PROJECT__: JSON.stringify(project),
@@ -87,7 +84,25 @@ export function createBaseConfig(config: { env?: Record<string, string> } & Conf
     },
     resolve: {
       extensions: ['.js', '.ts', '.mjs', '.jsx', '.tsx', '.json'],
-      alias
+      alias: {
+        'COMMON': path.join(rootPath, './common'),
+        'ASSETS': path.join(rootPath, './common/assets/'),
+        'IMAGES': path.join(rootPath, './common/assets/images'),
+        'STYLES': path.join(rootPath, './common/assets/styles'),
+        'UTILS': path.join(rootPath, './common/utils'),
+        '@': path.join(projectPath, './'),
+        '@api': path.join(projectPath, './api'),
+        '@i18n': path.join(projectPath, './i18n'),
+        '@compo': path.join(projectPath, './components'),
+        '@router': path.join(projectPath, './router'),
+        '@layouts': path.join(projectPath, './layouts'),
+        '@stores': path.join(projectPath, './stores'),
+        '@pages': path.join(projectPath, './pages'),
+        '@assets': path.join(projectPath, './assets/'),
+        '@styles': path.join(projectPath, './assets/styles'),
+        '@images': path.join(projectPath, './assets/images'),
+        '@public': path.join(projectPath, './public')
+      }
     }
   };
 }
