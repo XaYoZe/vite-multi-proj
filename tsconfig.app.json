@@ -2,6 +2,7 @@
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "rootDir": "./",
     "tsBuildInfoFile": "../../../node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "types": ["vite/client"],
     "strict": true,
@@ -12,33 +13,28 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "paths": {
-      "COMMON/*": ["../../../common"],
-      "ASSETS/*": ["../../../common/assets/"],
-      "IMAGES/*": ["../../../common/assets/images"],
-      "STYLES/*": ["../../../common/assets/styles"],
+      "COMMON/*": ["../../../common/*"],
+      "API/*": ["../../../common/api/*"],
+      "ASSETS/*": ["../../../common/assets/*"],
+      "IMAGES/*": ["../../../common/assets/images/*"],
+      "STYLES/*": ["../../../common/styles/*"],
       "UTILS": ["../../../common/utils"],
-      "UTILS/*": ["../../../common/utils/*"],
+      "UTILS/*": ["../../../common/utils/*", "./common/utils/*"],
+      "COMPO/*": ["../../../common/components/*"],
       "@": ["./"],
       "@api/*": ["./api/*"],
       "@i18n/*": ["./i18n/*"],
       "@compo/*": ["./components/*"],
       "@layouts/*": ["./layouts/*"],
-      "@router/*": ["./router/*"],
+      "@routes/*": ["./routes/*"],
       "@stores/*": ["./stores/*"],
       "@pages/*": ["./pages/*"],
-      "@assets/*": ["./assets//*"],
-      "@styles/*": ["./assets/styles/*"],
+      "@assets/*": ["./assets/*"],
       "@images/*": ["./assets/images/*"],
+      "@styles/*": ["./styles/*"],
       "@public/*": ["./public/*"]
     }
   },
-  "include": [
-    "./**/*.js",
-    "./**/*.ts",
-    "./**/*.tsx",
-    "./**/*.vue",
-    "../../../types/**/*.d.ts",
-    "../../../common/**/*.ts",
-    "../../../common/**/*.vue"
-  ]
+  "include": ["typings/**/*.d.ts", "./common/**/*.ts", "./common/**/*.vue"],
+  "exclude": ["node_modules", "dist"]
 }

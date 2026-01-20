@@ -1,4 +1,3 @@
-<script setup lang="ts"></script>
 <template>
   {{#if useRouter}}
   <router-view v-slot="{ Component }">
@@ -6,12 +5,16 @@
   </router-view>
   {{else}}
   <div class="app-container">
-    <main>
-      <slot />
-    </main>
+    <Home></Home>
   </div>
   {{/if}}
 </template>
+<script setup lang="ts">
+{{#if useRouter}}
+{{ else }}
+import Home from '@pages/index.vue';
+{{/if}}
+</script>
 <style scoped lang="scss">
 {{#if useRouter}}
 {{ else }}

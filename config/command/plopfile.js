@@ -90,19 +90,19 @@ export default function (plop) {
     {
       type: 'confirm',
       name: 'usePinia',
-      message: '是否使用 Pinia?',
+      message: '使用 🍍 Pinia?',
       default: true
     },
     {
       type: 'confirm',
       name: 'useRouter',
-      message: '是否使用 Vue Router?',
+      message: '使用 🏁 Vue Router?',
       default: true
     },
     {
       type: 'confirm',
       name: 'useI18n',
-      message: '是否使用 Vue I18n?',
+      message: '使用 📙 Vue I18n?',
       default: true
     }
   ];
@@ -114,7 +114,7 @@ export default function (plop) {
       message: '请输入项目名称(年份:项目):',
       validate: value => {
         if (!value) {
-          return '请输入正确的项目名称(例: demo:test):';
+          return '请输入正确的项目名称(例: 2025:share):';
         }
         // 创建输出目录
         if (fs.existsSync(getOutputDir(value))) {
@@ -133,7 +133,7 @@ export default function (plop) {
         if (err) {
           reject(err);
         } else {
-          resolve(`Created directory: ${dirPath}`);
+          resolve(`${dirPath}`);
         }
       });
     });
@@ -153,13 +153,9 @@ export default function (plop) {
       // 计算正确的输出路径
       const outputPath = getOutputDir(finalData.FolderProject);
       console.log(`🎉 输出路径: ${outputPath}`);
-      console.log(`📋 项目信息: ${finalData.projectName} 在 ${finalData.directoryName} 目录`);
-      console.log(
-        `⚙️  配置: 
-  pinia: ${finalData.usePinia ? '是' : '否'},
-  Router: ${finalData.useRouter ? '是' : '否'},
-  I18n: ${finalData.useI18n ? '是' : '否'}`
-      );
+      console.log(`🍍 使用pinia: ${finalData.usePinia ? '是' : '否'}`);
+      console.log(`🏁 使用Router: ${finalData.useRouter ? '是' : '否'}`);
+      console.log(`📙 使用I18n: ${finalData.useI18n ? '是' : '否'}`);
 
       // 查找所有 hbs 文件
       const templateDir = path.join(__dirname, '..', 'templates', 'project');

@@ -1,4 +1,6 @@
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - aws-sdk
   - core-js
   - esbuild
+  - vite-cdn-uploader

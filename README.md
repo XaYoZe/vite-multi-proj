@@ -5,6 +5,7 @@
 ## 技术栈
 
 - **前端框架**: Vue 3.5.24 + Composition API
+- **ui 框架**: vant
 - **路由管理**: Vue Router 4.6.3
 - **状态管理**: Pinia 3.0.4
 - **国际化**: Vue I18n 11.2.2 (支持中文、英语、印尼语、阿拉伯语)
@@ -21,65 +22,72 @@
 ## 命令行
 
 - `pnpm create:proj 年份:项目名`
-  生成新项目，在`src`目录下使用模板生成新的项目，路劲为`/src/年份/项目名`
+  生成新项目，在 `src`目录下使用模板生成新的项目，路径为 `/src/年份/项目名`
 - `pnpm dev 年份:项目名`
   开发模式，测试环境
 - `pnpm dev:prod 年份:项目名`
   开发模式，正式环境
 - `pnpm build:test 年份:项目名`
   构建测试环境
-- `pnpm build:prod 年份:项目名`
+- `pnpm build:prod 年份:项目名 --{参数}`
   构建正式环境
+  参数
+  - `--s3` 上传到 s3,资源使用 cdn 链接
+  - `--sonda` 生成可视化分析页面
+  - `--desktop` 构建桌面端,
 
 ## 项目结构
 
 生成的项目将位于 `src/{目录名}/{项目名}/` 目录下：
 
 ```
-common/
-├── assets/                  # 公用样式和图片资源
-│   ├── styles/              # 公用样式资源
-│   └── images/              # 公用图片资源
-└── utils/                   # 公用工具库
-    ├── axios.ts             # HTTP 请求封装
-    ├── jsBridge.js          # JS Bridge 工具
-    └── index.ts             # 工具库入口
-
-config/                      # 配置文件目录
-├── *.ts                     # Vite 配置文件
-├── postcss.config.js        # PostCSS 配置
-├── plugins/                 # Rollup/Vite 插件
-├── command/                 # 命令行工具
-└── templates/               # 项目模板（activity 模板等）
-
-src/
-├── {目录名}/
-│   └── {项目名}/
-│       ├── index.html       # HTML 入口文件
-│       ├── index.ts         # TypeScript 入口文件
-│       ├── tsconfig.json    # TypeScript 配置
-│       ├── layouts/         # 布局组件
-│       │   └── index.vue
-│       ├── pages/           # 页面组件
-│       │   └── index.vue
-│       ├── api/             # API 接口
-│       │   └── index.ts
-│       ├── stores/          # Pinia 状态管理
-│       │   └── index.ts
-│       ├── assets/          # 静态资源
-│       │   ├── images/      # 图片目录（保留空目录）
-│       │   └── styles/
-│       │       └── style.css
-│       ├── public/          # 公共资源目录（保留空目录）
-│       ├── router/          # Vue Router (可选)
-│       │   └── index.ts
-│       └── i18n/            # Vue I18n (可选)
-│           ├── index.ts
-│           └── locale/
-│               ├── en.ts    # 英语
-│               ├── in.ts    # 印尼语
-│               └── ar.ts    # 阿拉伯语
-
-types/                       # 类型定义文件
-└── *.d.ts                   # TypeScript 类型声明
+root
+├── common/
+|   ├── assets/                  # 公用样式和图片资源
+│   │   └── images/              # 公用图片资源
+│   ├── styles/                  # 公用样式资源
+│   ├── components/              # 公用组件
+│   └── utils/                   # 公用工具库
+│       ├── axios.ts             # HTTP 请求封装
+│       ├── jsBridge.js          # JS Bridge 工具
+│       └── index.ts             # 工具库入口
+├── config/                      # 配置文件目录
+│   ├── *.ts                     # Vite 配置文件
+│   ├── postcss.config.js        # PostCSS 配置
+│   ├── plugins/                 # Rollup/Vite 插件
+│   ├── command/                 # 命令行工具
+│   └── templates/               # 项目模板（activity 模板等）
+├── src/                         # 活动版本代码
+│   └── {目录名}/
+│       └── {项目名}/
+│           ├── readme.md        # 活动说明
+│           ├── index.html       # HTML 入口文件
+│           ├── scripts          # 脚本
+|           |   └── index.ts         # TypeScript 入口文件
+│           ├── tsconfig.json    # TypeScript 配置
+│           ├── layouts/         # 布局组件
+│           │   └── index.vue
+│           ├── pages/           # 页面组件
+│           │   └── index.vue
+│           ├── api/             # API 接口
+│           │   └── index.ts
+│           ├── stores/          # Pinia 状态管理
+│           │   └── index.ts
+│           ├── assets/          # 静态资源
+│           │   └── images/      # 图片目录（保留空目录）
+│           │── styles/
+│           │   └── style.css
+│           ├── public/          # 公共资源目录（保留空目录）
+│           ├── router/          # Vue Router (可选)
+│           │   └── index.ts
+│           └── i18n/            # Vue I18n (可选)
+│               ├── index.ts
+│               └── locale/
+│                   ├── en.ts    # 英语
+│                   └── hi.ts    # 印尼语
+|
+├── types/                        # 类型定义文件
+│   └── *.d.ts                   # TypeScript 类型声明
+├── .prettierrc                  # prettierrc 格式化规则
+├── tsconfig.json                # ts 配置
 ```

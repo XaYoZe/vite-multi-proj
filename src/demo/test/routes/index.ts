@@ -11,7 +11,8 @@ const router = createRouter({
     },
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/'
+      name: '404',
+      component: () => import('@layouts/404.vue')
     }
   ]
 });

@@ -1,10 +1,12 @@
 import { createI18n } from 'vue-i18n';
+import { getLang } from 'UTILS';
 import langEn from './locale/en';
 import langHi from './locale/hi';
 
 const i18n = createI18n({
-  locale: 'zh-CN',
-  fallbackLocale: 'en-US',
+  legacy: false,
+  locale: getLang(),
+  fallbackLocale: 'en',
   messages: {
     en: langEn,
     hi: langHi

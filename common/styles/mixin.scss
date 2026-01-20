@@ -1,0 +1,41 @@
+// 全局混入样式混入
+
+@mixin flex($dir: row, $x: center, $y: center) {
+  display: flex;
+  flex-direction: $dir;
+  @if $dir == row {
+    justify-content: $x;
+    align-items: $y;
+  } @else {
+    justify-content: $y;
+    align-items: $x;
+  }
+}
+
+@mixin position($top: null, $right: null, $bottom: null, $left: null) {
+  position: absolute;
+  @if $top == null and $bottom == null and $left == null and $right == null {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  } @else {
+    @if $left == null and $right == null {
+      left: 50%;
+      transform: translateX(-50%);
+    } @else {
+      left: $left;
+      right: $right;
+    }
+    @if $top == null and $bottom == null {
+      top: 50%;
+      transform: translateY(-50%);
+    } @else {
+      top: $top;
+      bottom: $bottom;
+    }
+  }
+}
+
+@mixin img($url, $size: 100%, $repeat: no-repeat, $position: center top, $color: transparent) {
+  background: url($url) $repeat $position / $size, $color;
+}

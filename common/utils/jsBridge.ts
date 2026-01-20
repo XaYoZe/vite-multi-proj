@@ -1,31 +1,70 @@
+import { devTool } from '.';
+
+type JsBridgeRegister<params = undefined, result = undefined> = result extends undefined
+  ? params extends undefined
+    ? () => void
+    : (params: params) => void
+  : params extends undefined
+    ? (callback: (data: params) => void) => void
+    : (params: params, callback: (data: result) => void) => void;
+
+/** 交互方式 */
 export interface HandlerList extends Record<string, any> {
-  initData: () => Promise<{
-    /** token */
-    token: string
-    /** 客户端版本 */
-    version: string
-    /** 语言 */
-    language: string
-    /** 用户id */
-    userId: string
-    /** 用户短id */
-    userNum: string
-    /** 用户名 */
-    userName: string
-    /** 用户头像 */
-    userAvatar: string
-  }>
+  getToken: JsBridgeRegister<
+    undefined,
+    {
+      /** token */
+      token: string;
+    }
+  >;
+  generalRouteJump: JsBridgeRegister<{ jumpUrl: string }>;
+  closePage: JsBridgeRegister;
 }
 
-// window.jsClientBridge =  new JsClientBridge();
-window.jsClientBridge =  new Proxy<HandlerList>({} as HandlerList, {
-  get: <T extends string>(target: Partial<HandlerList>, method:T)=> {
+devTool();
+
+let callbackIndex = 1;
+const jsBridgeCallbackCache: Record<string, any> = {};
+window.jsClientBridge = new Proxy<HandlerList>({} as HandlerList, {
+  get: <T extends string>(target: Partial<HandlerList>, method: T) => {
     if (target[method as string]) {
-      return target[method]
+      return target[method];
     }
-    return (params: (HandlerList[T] extends (args: infer P) => any ? P : Record<string, any>)) => window.flutter_inappwebview?.callHandler(method, params) || Promise.reject('flutter_inappwebview not found')
+    const register: HandlerList[T] = (params: any, callback: any) => {
+      if (typeof params === 'function') {
+        callback = params;
+        params = {};
+      }
+      const eventParams = {
+        action: method.trim(),
+        params,
+        callbackId: ''
+      };
+      if (callback) {
+        eventParams.callbackId = `${method}_${callbackIndex++}`;
+        jsBridgeCallbackCache[eventParams.callbackId] = callback;
+      }
+      window?.flutter_inappwebview?.callHandler('FlutterBridge', eventParams) ||
+        console.log(
+          '%cflutter_inappwebview not found',
+          'background: #f00;color: #fff;padding: 2px 10px;border-radius: 4px;font-weight: bold;font-size : 13px;'
+        );
+    };
+    return register;
   },
   set: () => {
-    return false
+    return false;
   }
 });
+
+interface FlutterBridgeCallbackArgs {
+  success: boolean;
+  data: any;
+  callbackId?: string;
+}
+/** flutter 回调 */
+window.flutterBridgeCallback = (result: FlutterBridgeCallbackArgs) => {
+  if (result.callbackId) {
+    jsBridgeCallbackCache[result.callbackId]?.(result.data);
+  }
+};

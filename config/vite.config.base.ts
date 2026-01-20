@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import vue from '@vitejs/plugin-vue';
 import vuePluginOptions from './vue.config';
 import type { UserConfig, ConfigEnv } from 'vite';
@@ -27,7 +28,7 @@ export function parseCommandLineArgs() {
 // 获取项目路径配置
 export function getProjectPaths() {
   const commandLineArgs = parseCommandLineArgs();
-  const folderParam = commandLineArgs.Folder;
+  const folderParam = String(commandLineArgs.Folder || '');
   const [folder, project] = folderParam?.split(':') ?? [];
 
   if (!folder || !project) {
@@ -43,15 +44,18 @@ export function getProjectPaths() {
 
 // 公用配置
 export function createBaseConfig(config: { env?: Record<string, string> } & ConfigEnv): UserConfig {
-  const { rootPath, projectPath, project, folder } = getProjectPaths();
-  const commandLineArgs = parseCommandLineArgs();
+  const { rootPath, projectPath, project } = getProjectPaths();
 
   console.log('环境模式:', config.mode);
   console.log('命令:', config.command);
-  console.log('命令行参数:', commandLineArgs);
-  console.log('Folder参数值:', `${folder}:${project}`);
   console.log('根目录:', rootPath);
   console.log('项目路径:', projectPath);
+
+  try {
+    fs.statfsSync(path.join(projectPath, './scripts/index.ts'));
+  } catch (error) {
+    throw new Error('项目不存在');
+  }
 
   return {
     envDir: path.join(rootPath, './config/env'),
@@ -62,7 +66,7 @@ export function createBaseConfig(config: { env?: Record<string, string> } & Conf
       exclude: ['node_modules']
     },
     css: {
-      postcss: './config/postcss.config.js',
+      postcss: config.env?.desktop ? {} : './config/postcss.config.js',
       devSourcemap: config.mode === 'development',
       preprocessorOptions: {
         scss: {
@@ -86,21 +90,23 @@ export function createBaseConfig(config: { env?: Record<string, string> } & Conf
       extensions: ['.js', '.ts', '.mjs', '.jsx', '.tsx', '.json'],
       alias: {
         'COMMON': path.join(rootPath, './common'),
+        'API': path.join(rootPath, './common/api/'),
         'ASSETS': path.join(rootPath, './common/assets/'),
         'IMAGES': path.join(rootPath, './common/assets/images'),
-        'STYLES': path.join(rootPath, './common/assets/styles'),
+        'STYLES': path.join(rootPath, './common/styles'),
         'UTILS': path.join(rootPath, './common/utils'),
+        'COMPO': path.join(rootPath, './common/components'),
         '@': path.join(projectPath, './'),
         '@api': path.join(projectPath, './api'),
         '@i18n': path.join(projectPath, './i18n'),
         '@compo': path.join(projectPath, './components'),
-        '@router': path.join(projectPath, './router'),
+        '@routes': path.join(projectPath, './routes'),
         '@layouts': path.join(projectPath, './layouts'),
         '@stores': path.join(projectPath, './stores'),
         '@pages': path.join(projectPath, './pages'),
         '@assets': path.join(projectPath, './assets/'),
-        '@styles': path.join(projectPath, './assets/styles'),
         '@images': path.join(projectPath, './assets/images'),
+        '@styles': path.join(projectPath, './styles'),
         '@public': path.join(projectPath, './public')
       }
     }

@@ -13,25 +13,41 @@ export default defineConfig(config => {
   const { projectPath, outDir, rootPath, project } = getProjectPaths();
   const commandLineArgs = parseCommandLineArgs();
 
-  const env = loadEnv(config.mode, path.join(rootPath, './config/env'), '');
+  const env = Object.assign(
+    {},
+    loadEnv(config.mode, path.join(rootPath, './config/env'), ''),
+    commandLineArgs
+  );
 
   const beseConfig = createBaseConfig({ env, ...config });
 
-  // 获取 Vendor CDN 基础 URL（优先使用环境变量，否则使用测试值）
-  const vendorCdnUrl = env?.CDN_URL || '';
+  // 获取 CDN 基础 URL（优先使用环境变量，否则使用测试值）
+  let baseUrl = './';
+  if (env?.VITE_CDN_URL && commandLineArgs.s3) {
+    baseUrl = `${env.VITE_CDN_URL}/${env.S3_PREFIX}/${project}/`;
+    console.log('🚀 资源使用CDN:', baseUrl);
+  }
 
   // 配置手动分块，将 Vue 相关库分离为独立的 vendor 文件
-  const manualChunks = {
-    // Vue 核心库包
-    // Vue 路由库包
-    // Vue 状态管理库包
-    // 其他工具库包（可根据需要添加）
-    lib: ['vue', 'vue-router', 'pinia', 'axios']
-  };
+  // const manualChunks = {
+  //   // Vue 核心库包
+  //   // Vue 路由库包
+  //   // Vue 状态管理库包
+  //   // 其他工具库包（可根据需要添加）
+  //   lib: ['vue', 'vue-router', 'pinia', 'axios']
+  // };
 
   // 构建插件数组
   const plugins = [
-    legacy(),
+    legacy({
+      targets: [
+        'defaults',
+        '>0.3%',
+        ...(!commandLineArgs.desktop
+          ? ['ios >= 10', 'android >= 10', 'safari >= 10', 'chrome >= 66']
+          : [])
+      ]
+    }),
     uploadToS3({
       enbled: commandLineArgs.s3,
       env,
@@ -46,15 +62,13 @@ export default defineConfig(config => {
     })
   ];
 
-  // 如果配置了 CDN URL，则添加链接替换插件
-  if (vendorCdnUrl) {
-  }
-
   return mergeConfig(beseConfig, {
+    base: baseUrl,
     preview: {
       host: '0.0.0.0'
     },
     build: {
+      minify: 'esbuild',
       outDir: outDir,
       emptyOutDir: true,
       sourcemap: config.mode === 'development' ? true : false,
@@ -62,9 +76,9 @@ export default defineConfig(config => {
         output: {
           entryFileNames: 'js/[name]-[hash].js',
           chunkFileNames: 'js/[name]-[hash].js',
-          assetFileNames: 'assets/[name]-[hash].[ext]',
+          assetFileNames: 'assets/[name]-[hash].[ext]'
           // 配置手动分块，将 Vue 相关库分离为独立的 vendor 文件
-          manualChunks
+          // manualChunks
         },
         input: {
           main: path.join(projectPath, './index.html')

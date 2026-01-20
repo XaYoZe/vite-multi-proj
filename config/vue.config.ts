@@ -1,4 +1,4 @@
-import type { Options as VuePluginOptions } from "@vitejs/plugin-vue";
+import type { Options as VuePluginOptions } from '@vitejs/plugin-vue';
 
 /**
  * @vitejs/plugin-vue 常用配置项
@@ -34,7 +34,7 @@ export const vuePluginOptions: VuePluginOptions = {
        * 自定义元素白名单，匹配的标签不会被当作 Vue 组件解析
        * 适用于 Web Components
        */
-      isCustomElement: (tag) => tag.startsWith("custom-"),
+      isCustomElement: tag => tag.startsWith('custom-'),
 
       /**
        * 是否保留模板中的注释
@@ -47,7 +47,7 @@ export const vuePluginOptions: VuePluginOptions = {
        * 'preserve': 保留所有空白
        * 'condense': 压缩空白（默认）
        */
-      whitespace: "condense",
+      whitespace: 'condense'
     },
 
     /**
@@ -59,8 +59,8 @@ export const vuePluginOptions: VuePluginOptions = {
       source: ['src'],
       img: ['src'],
       image: ['xlink:href', 'href'],
-      use: ['xlink:href', 'href'],
-    },
+      use: ['xlink:href', 'href']
+    }
   },
 
   /**
@@ -77,8 +77,7 @@ export const vuePluginOptions: VuePluginOptions = {
      * 启用 defineModel 宏
      * Vue 3.3+ 已默认启用
      */
-    defineModel: true,
-
+    defineModel: true
   },
 
   /**
@@ -100,14 +99,13 @@ export const vuePluginOptions: VuePluginOptions = {
      * 启用 options API
      * 如果只使用 Composition API，可设为 false 减少打包体积
      */
-    optionsAPI: true,
+    optionsAPI: false,
 
     /**
      * 启用 prod devtools
      * 生产环境下是否允许 devtools
      */
     // prodDevtools: false,
-
 
     /**
      * 启用 prod hydration mismatch 详情
@@ -119,13 +117,13 @@ export const vuePluginOptions: VuePluginOptions = {
      * 例如处理 <i18n> 块
      */
     customElement: false,
-    
+
     /**
      * 启用 propsDestructure
      * 允许在 defineProps 中使用解构
      */
-    propsDestructure: true,
-  },
+    propsDestructure: true
+  }
 };
 
 export default vuePluginOptions;
